@@ -103,6 +103,8 @@ public class TestRegistration extends ActivityInstrumentationTestCase2<Registrat
                 registrati.performClick();
             }
         });
+
+        Thread.sleep(7000);
         onView(withText("Email o username esistente")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
     }
