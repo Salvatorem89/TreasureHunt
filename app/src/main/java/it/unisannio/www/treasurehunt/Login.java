@@ -1,6 +1,5 @@
 package it.unisannio.www.treasurehunt;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -8,43 +7,38 @@ import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public class Registration extends AppCompatActivity {
+public class Login extends AppCompatActivity {
 
-    private EditText email = null;
     private EditText username = null;
     private EditText password = null;
-    private Button submit =null;
     private ProgressBar bar = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
-        email = findViewById(R.id.email);
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
-        submit = findViewById(R.id.submit);
+        setContentView(R.layout.activity_login);
+        username = findViewById(R.id.user);
+        password = findViewById(R.id.pwd);
         bar = findViewById(R.id.progressBar);
     }
 
-    public void submit(View view){
+    public void sign(View view) {
         if(!isNetworkAvailable())
         {
             Toast to = Toast.makeText(getApplicationContext(), "Tentativo di connessione fallito. Attiva connessione dati", Toast.LENGTH_LONG);
             to.show();
         }
         else {
-            String mail = email.getText().toString();
             String user = username.getText().toString();
             String pwd = password.getText().toString();
-            String url = "http://treshunte.altervista.org/registration.php?email=" + mail + "&name=" + user + "&password=" + pwd;
-            if (!mail.contains("@") || user.matches("") || pwd.matches("")) {
+            if (user.matches("") || pwd.matches("")) {
                 Toast.makeText(getApplicationContext(), "Dati inseriti non validi", Toast.LENGTH_LONG).show();
             } else {
+                String url = "http://treshunte.altervista.org/registration.php?&name=" + user + "&password=" + pwd;
                 DBRequest rq = new DBRequest(url);
                 String resp = "";
                 int stato = 0;
@@ -55,24 +49,23 @@ public class Registration extends AppCompatActivity {
                         bar.setProgress(stato);
                         progress = stato;
                     }
+
                     stato = rq.getStato();
-                }
-                if (stato == 100) {
-                    bar.setProgress(100);
                 }
                 resp = rq.getResult();
                 Toast to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
                 to.show();
-                if (resp.equalsIgnoreCase("Registrazione Avvenuta")) {
+                if (resp.equalsIgnoreCase("Login avvenuto con successo"))
                     startActivity(new Intent("android.intent.action.MAIN"));
-                } else {
+                else {
                     to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
                     to.show();
                 }
-                bar.setProgress(0);
             }
         }
-
+    }
+    public void register(View view){
+        startActivity(new Intent("android.intent.action.Registration"));
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
