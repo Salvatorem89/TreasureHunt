@@ -1,4 +1,7 @@
 language: android
 
 script:
+   - ./gradlew build connectedCheck
+
+script:
   - chmod +x ./gradlew  
