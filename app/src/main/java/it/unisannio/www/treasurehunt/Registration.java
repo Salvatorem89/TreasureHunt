@@ -63,8 +63,8 @@ public class Registration extends AppCompatActivity {
                 resp = rq.getResult();
                 Toast to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
                 to.show();
-                if (resp.equalsIgnoreCase("Registrazione Avvenuta")) {
-                    startActivity(new Intent("android.intent.action.MAIN"));
+                if (resp.equalsIgnoreCase("Registrazione Avvenuta\n")) {
+                    startActivity(new Intent(this,MainActivity.class));
                 } else {
                     to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
                     to.show();

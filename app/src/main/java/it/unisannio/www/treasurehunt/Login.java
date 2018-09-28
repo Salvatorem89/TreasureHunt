@@ -6,7 +6,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ public class Login extends AppCompatActivity {
         password = findViewById(R.id.pwd);
         bar = findViewById(R.id.progressBarLogin);
     }
+
 
     public void sign(View view) {
         if(!isNetworkAvailable())
@@ -53,10 +56,11 @@ public class Login extends AppCompatActivity {
                     stato = rq.getStato();
                 }
                 resp = rq.getResult();
-                Toast to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
-                if (resp.equalsIgnoreCase("Login avvenuto con successo")) {
+                Toast to = Toast.makeText(getApplicationContext(), resp , Toast.LENGTH_LONG);
+                if (resp.equalsIgnoreCase("Login avvenuto con successo\n")) {
                     to.show();
-                    startActivity(new Intent("android.intent.action.MAIN"));
+                    startActivity(new Intent(this,MainActivity.class));
+
                 }
                 else {
                     to.show();
