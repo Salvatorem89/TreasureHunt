@@ -36,21 +36,34 @@ public class TestRegistration extends ActivityInstrumentationTestCase2<Registrat
         Thread.sleep(2000);
     }
 
+    //Testa il caso in cui l'utente non inserisce la chiocciola in fase di registrazione
     @Test
     public void  testRegWithoutAt() throws InterruptedException {
         Thread.sleep(2000);
         registrati = (Button) reg.findViewById(R.id.submit);
         //assertNotNull(registrati);
 
-        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_J);
-        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_I);
-        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_M);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_TAB);
         Thread.sleep(2000);
 
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_TAB);
         Thread.sleep(1000);
 
-        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_TAB);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
         Thread.sleep(1000);
 
         reg.runOnUiThread(new Runnable() {
@@ -63,8 +76,9 @@ public class TestRegistration extends ActivityInstrumentationTestCase2<Registrat
 
     }
 
+    //Controlla se l'utente si regidtra inserendo delle credenziali già presenti nel database
     @Test
-    public void testRegWithAT() throws InterruptedException {
+    public void testExistingUser() throws InterruptedException {
 
         Thread.sleep(2000);
         registrati = (Button) reg.findViewById(R.id.submit);
@@ -104,11 +118,47 @@ public class TestRegistration extends ActivityInstrumentationTestCase2<Registrat
             }
         });
 
-        Thread.sleep(7000);
-        onView(withText("Email o username esistente")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
+        onView(withText("Email o username esistente")).inRoot(withDecorView(not(getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
+    //Controlla se l'utente in fase di registrazione manca uno dei campi
+    @Test
+    public void testInputNull() throws InterruptedException {
+        Thread.sleep(2000);
+        registrati = (Button) reg.findViewById(R.id.submit);
+        assertNotNull(registrati);
 
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_AT);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        Thread.sleep(2000);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_TAB);
+        Thread.sleep(3000);
+
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_TAB);
+        Thread.sleep(2000);
+
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
+        Thread.sleep(2000);
+
+        reg.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                registrati.performClick();
+            }
+        });
+
+        onView(withText("Dati inseriti non validi")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+
+    }
 }
 
