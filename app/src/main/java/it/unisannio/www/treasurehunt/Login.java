@@ -23,7 +23,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         username = findViewById(R.id.user);
         password = findViewById(R.id.pwd);
-        bar = findViewById(R.id.progressBar);
+        bar = findViewById(R.id.progressBarLogin);
     }
 
     public void sign(View view) {
@@ -38,7 +38,7 @@ public class Login extends AppCompatActivity {
             if (user.matches("") || pwd.matches("")) {
                 Toast.makeText(getApplicationContext(), "Dati inseriti non validi", Toast.LENGTH_LONG).show();
             } else {
-                String url = "http://treshunte.altervista.org/login.php?&name=" + user + "&password=" + pwd;
+                String url = "http://treshunte.altervista.org/login.php?name=" + user + "&password=" + pwd;
                 DBRequest rq = new DBRequest(url);
                 String resp = "";
                 int stato = 0;
@@ -54,11 +54,11 @@ public class Login extends AppCompatActivity {
                 }
                 resp = rq.getResult();
                 Toast to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
-                to.show();
-                if (resp.equalsIgnoreCase("Login avvenuto con successo"))
+                if (resp.equalsIgnoreCase("Login avvenuto con successo")) {
+                    to.show();
                     startActivity(new Intent("android.intent.action.MAIN"));
+                }
                 else {
-                    to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
                     to.show();
                 }
             }
