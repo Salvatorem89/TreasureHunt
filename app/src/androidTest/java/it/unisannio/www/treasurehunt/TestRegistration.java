@@ -76,7 +76,7 @@ public class TestRegistration extends ActivityInstrumentationTestCase2<Registrat
 
     }
 
-    //Controlla se l'utente si regidtra inserendo delle credenziali già presenti nel database
+    //Controlla se l'utente si registra inserendo delle credenziali già presenti nel database
     @Test
     public void testExistingUser() throws InterruptedException {
 
@@ -119,7 +119,7 @@ public class TestRegistration extends ActivityInstrumentationTestCase2<Registrat
         });
 
 
-        onView(withText("Email o username esistente")).inRoot(withDecorView(not(getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
+        onView(withText("Email o username esistente\n")).inRoot(withDecorView(not(getActivity().getWindow().getDecorView()))).check(matches(isDisplayed()));
     }
 
     //Controlla se l'utente in fase di registrazione manca uno dei campi

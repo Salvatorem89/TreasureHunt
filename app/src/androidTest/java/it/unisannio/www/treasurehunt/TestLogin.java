@@ -33,6 +33,7 @@ public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
         Thread.sleep(2000);
     }
 
+    //controllo se l'utente inserisce un username o password non presente nel database
     @Test
     public void testNotExistingUser() throws InterruptedException{
 
@@ -60,10 +61,11 @@ public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
         });
 
         Thread.sleep(2000);
-        onView(withText("Username o Password errate")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        onView(withText("Username o Password errate\n")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
     }
 
+    //controlla se l'utente lascia il campo vuoto
     @Test
     public void testLogNull() throws InterruptedException{
 
@@ -88,5 +90,6 @@ public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
         onView(withText("Dati inseriti non validi")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
     }
+
 
 }
