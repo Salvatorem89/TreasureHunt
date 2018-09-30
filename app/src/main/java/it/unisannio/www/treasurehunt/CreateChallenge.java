@@ -141,6 +141,15 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                 .enableAutoManage(this, this)
                 .build();
 
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng point) {
+                Log.d("DEBUG","Map clicked [" + point.latitude + " / " + point.longitude + "]");
+                Toast.makeText(getApplicationContext(), "Map clicked [" + point.latitude + " / " + point.longitude + "]", Toast.LENGTH_LONG).show();
+                //Do your stuff with LatLng here
+                //Then pass LatLng to other activity
+            }
+        });
         //mSearchText.setOnItemClickListener(mAutocompleteClickListener);
 
         //mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
