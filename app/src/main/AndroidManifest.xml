@@ -51,7 +51,21 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateChallenge"></activity>
+        <activity android:name=".CreateChallenge">
+            <intent-filter>
+             <action android:name="android.intent.action.CreateChallenge" />
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Question">
+            <intent-filter>
+                <action android:name="android.intent.action.Question" />
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">TreasureHunt</string>
     <string name="google_maps_API_key">AIzaSyCdyAGnBLOSkEjiqOpJTC3ufzFsbWg8Hj0</string>
+    <string-array name="questions">
+        <item>Chi fondò Roma?</item>
+        <item>Qual è la capitale d'Italia?</item>
+        <item>Chi ha vinto il mondiale di calcio del 2006?</item>
+        <item>Come si chiama il protagonista dell'anime One Piece?</item>
+        <item>Chi ha scritto il libro "La fattoria degli animali"?</item>
+        <item>Chi scoprì l'America?</item>
+        <item>Che logo ha l'azienda Apple?</item>
+    </string-array>
 </resources>

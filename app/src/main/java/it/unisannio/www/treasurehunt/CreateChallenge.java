@@ -2,6 +2,8 @@ package it.unisannio.www.treasurehunt;
 
 
 import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -11,16 +13,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +60,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.PendingIntent.getActivity;
+
 
 public class CreateChallenge extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener{
@@ -63,8 +73,8 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onMapReady: map is ready");
+        Toast.makeText(this, "Mappa pronta", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onMapReady: mappa pronta");
         mMap = googleMap;
 
         if (mLocationPermissionsGranted) {
@@ -78,20 +88,11 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
-            googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener(){
-                public void onMapClick(LatLng point){
-                    Toast.makeText(getApplicationContext(),
-                            point.latitude + ", " + point.longitude,
-                            Toast.LENGTH_SHORT).show();
-                }
-            });
-
             init();
         }
     }
 
     private static final String TAG = "MapActivity";
-
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -99,6 +100,8 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
+
+    String[] domande = new String[7];
 
 
     //widgets
@@ -128,7 +131,13 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
        // mPlacePicker = findViewById(R.id.place_picker);
         percorso = new ArrayList<Checkpoint>();
         getLocationPermission();
-
+        if(getIntent().getExtras()!=null){
+            Checkpoint checkpoint = new Checkpoint();
+            checkpoint.setQuestion(getIntent().getExtras().getString("question"));
+            checkpoint.setLatitude(getIntent().getExtras().getDouble("lat"));
+            checkpoint.setLongitude(getIntent().getExtras().getDouble("long"));
+            percorso.add(checkpoint);
+        }
     }
 
     private void init(){
@@ -144,10 +153,10 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng point) {
-                Log.d("DEBUG","Map clicked [" + point.latitude + " / " + point.longitude + "]");
-                Toast.makeText(getApplicationContext(), "Map clicked [" + point.latitude + " / " + point.longitude + "]", Toast.LENGTH_LONG).show();
-                //Do your stuff with LatLng here
-                //Then pass LatLng to other activity
+                Intent intent = new Intent("android.intent.action.Question");
+                intent.putExtra("lat", point.latitude);
+                intent.putExtra("long", point.longitude);
+                startActivity(intent);
             }
         });
         //mSearchText.setOnItemClickListener(mAutocompleteClickListener);
@@ -217,6 +226,48 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         hideSoftKeyboard();
     }
 
+    public void endChallenge(){
+        ProgressBar bar = findViewById(R.id.progressBarLogin);
+        String url = "http://treshunte.altervista.org/idPercorso.php";
+        DBRequest rq = new DBRequest(url);
+        String resp = "";
+        int stato = 0;
+        stato = rq.getStato();
+        int progress = 0;
+        while (stato != 100) {
+            if (stato != progress) {
+                bar.setProgress(stato);
+                progress = stato;
+            }
+
+            stato = rq.getStato();
+        }
+        resp = rq.getResult();
+        int idPercorso = Integer.parseInt((resp))+1;
+        int idCheckpoint = 1;
+        for(Checkpoint checkpoint : percorso){
+            url = "http://treshunte.altervista.org/saveCheckpoint.php?idPercorso="+idPercorso+"&idCheckpoint="
+                    +idCheckpoint+"&lat="+checkpoint.getLatitude()+"&long="+checkpoint.getLongitude()+"&question="
+                    +checkpoint.getQuestion();
+            rq = new DBRequest(url);
+            resp = "";
+            stato = 0;
+            stato = rq.getStato();
+            progress = 0;
+            while (stato != 100) {
+                if (stato != progress) {
+                    bar.setProgress(stato);
+                    progress = stato;
+                }
+
+                stato = rq.getStato();
+            }
+            resp = rq.getResult();
+            idCheckpoint++;
+        }
+        Toast.makeText(getApplicationContext(),"Creazione sfida avvenuta con successo", Toast.LENGTH_LONG).show();
+        startActivity(new Intent("android.intent.action.MAIN"));
+    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
