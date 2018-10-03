@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+
 public class Question extends AppCompatActivity {
     private double latitude,longitude;
     private Spinner spinner;
+    private ArrayList<Checkpoint> percorso;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,6 +20,7 @@ public class Question extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         if(getIntent().getExtras()!=null)
         {
+            percorso = (ArrayList<Checkpoint>) getIntent().getExtras().get("percorso");
             latitude= getIntent().getExtras().getDouble("lat");
             longitude=getIntent().getExtras().getDouble("long");
         }
@@ -33,6 +37,7 @@ public class Question extends AppCompatActivity {
         intent.putExtra("question", q);
         intent.putExtra("lat", latitude);
         intent.putExtra("long", longitude);
+        intent.putExtra("percorso",percorso);
         startActivity(intent);
     }
 }

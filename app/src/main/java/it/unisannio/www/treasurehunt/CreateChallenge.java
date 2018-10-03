@@ -49,6 +49,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -107,7 +108,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
     //widgets
     private AutoCompleteTextView mSearchText;
     private ImageView mGps;
-            //, mInfo, mPlacePicker;
+    //, mInfo, mPlacePicker;
 
 
     //vars
@@ -118,6 +119,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
     private Marker mMarker;
+    private ProgressBar bar;
 
     private ArrayList<Checkpoint> percorso;
 
@@ -125,11 +127,17 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_challenge);
+        bar = findViewById(R.id.insertChallengeBar);
        // mSearchText = findViewById(R.id.input_search);
         mGps = findViewById(R.id.ic_gps);
        // mInfo = findViewById(R.id.place_info);
        // mPlacePicker = findViewById(R.id.place_picker);
-        percorso = new ArrayList<Checkpoint>();
+        if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("percorso")) {
+            percorso = (ArrayList<Checkpoint>) getIntent().getExtras().get("percorso");
+        }
+        else {
+            percorso = new ArrayList<Checkpoint>();
+        }
         getLocationPermission();
         if(getIntent().getExtras()!=null){
             Checkpoint checkpoint = new Checkpoint();
@@ -149,38 +157,18 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(this, this)
                 .build();
-
+        if(!percorso.isEmpty())
+            setCheckpoint(mMap);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng point) {
                 Intent intent = new Intent("android.intent.action.Question");
+                intent.putExtra("percorso", percorso);
                 intent.putExtra("lat", point.latitude);
                 intent.putExtra("long", point.longitude);
                 startActivity(intent);
             }
         });
-        //mSearchText.setOnItemClickListener(mAutocompleteClickListener);
-
-        //mPlaceAutocompleteAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient,
-          //      LAT_LNG_BOUNDS, null);
-
-       // mSearchText.setAdapter(mPlaceAutocompleteAdapter);
-
-       /* mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-
-                    //execute our method for searching
-                    geoLocate();
-                }
-
-                return false;
-            }
-        });*/
 
         mGps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,45 +177,10 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                 getDeviceLocation();
             }
         });
-/*
-        mInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked place info");
-                try{
-                    if(mMarker.isInfoWindowShown()){
-                        mMarker.hideInfoWindow();
-                    }else{
-                        Log.d(TAG, "onClick: place info: " + mPlace.toString());
-                        mMarker.showInfoWindow();
-                    }
-                }catch (NullPointerException e){
-                    Log.e(TAG, "onClick: NullPointerException: " + e.getMessage() );
-                }
-            }
-        });
-
-        mPlacePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-                try {
-                    startActivityForResult(builder.build(MapActivity.this), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesRepairableException: " + e.getMessage() );
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    Log.e(TAG, "onClick: GooglePlayServicesNotAvailableException: " + e.getMessage() );
-                }
-            }
-        });
-*/
         hideSoftKeyboard();
     }
 
-    public void endChallenge(){
-        ProgressBar bar = findViewById(R.id.progressBarLogin);
+    public void endChallenge(View view){
         String url = "http://treshunte.altervista.org/idPercorso.php";
         DBRequest rq = new DBRequest(url);
         String resp = "";
@@ -242,13 +195,16 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
 
             stato = rq.getStato();
         }
-        resp = rq.getResult();
-        int idPercorso = Integer.parseInt((resp))+1;
+        resp = rq.getResult().substring(0,1);
+        Integer idPercorso = Integer.valueOf(resp)+1;
+
         int idCheckpoint = 1;
         for(Checkpoint checkpoint : percorso){
+            String quest = checkpoint.getQuestion().replace(" ", "_");
+
             url = "http://treshunte.altervista.org/saveCheckpoint.php?idPercorso="+idPercorso+"&idCheckpoint="
                     +idCheckpoint+"&lat="+checkpoint.getLatitude()+"&long="+checkpoint.getLongitude()+"&question="
-                    +checkpoint.getQuestion();
+                    +quest;
             rq = new DBRequest(url);
             resp = "";
             stato = 0;
@@ -259,14 +215,13 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                     bar.setProgress(stato);
                     progress = stato;
                 }
-
                 stato = rq.getStato();
             }
             resp = rq.getResult();
             idCheckpoint++;
         }
         Toast.makeText(getApplicationContext(),"Creazione sfida avvenuta con successo", Toast.LENGTH_LONG).show();
-        startActivity(new Intent("android.intent.action.MAIN"));
+        startActivity(new Intent(this,MainActivity.class));
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
@@ -280,7 +235,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         }
     }
 
-    private void geoLocate(){
+ /*   private void geoLocate(){
         Log.d(TAG, "geoLocate: geolocating");
 
         String searchString = mSearchText.getText().toString();
@@ -302,7 +257,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM,
                     address.getAddressLine(0));
         }
-    }
+    }*/
 
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
@@ -498,15 +453,16 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         }
     };
 
-    public void saveCheckpoint(Checkpoint point){
+    private void setCheckpoint(GoogleMap googleMap){
+        for(Checkpoint checkpoint : percorso){
+            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(checkpoint.getLatitude(),checkpoint.getLongitude())).title(""+checkpoint.getIdCheckpoint());
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
+            googleMap.addMarker(markerOptions);
+        }
 
-        String query = "INSERT INTO checkpoint VALUES ('" + point.getIdRun() + "','" + point.getIdCheckpoint() + "','" + point.getLatitude() + "','" + point.getLongitude() + "','" + point.getQuestion() + "','" + point.getAnswer() + "');";
-        DBRequest rq = new DBRequest(query);
     }
-
-    public void setCheckpoint(GoogleMap gm){
-
-
+    public void cancelChallenge(View view){
+        startActivity(new Intent(this,MainActivity.class));
     }
 
 }

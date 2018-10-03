@@ -1,6 +1,8 @@
 package it.unisannio.www.treasurehunt;
 
-public class Checkpoint {
+import java.io.Serializable;
+
+public class Checkpoint implements Serializable{
     private int idCheckpoint, idRun;
     private double latitude, longitude;
     private String question, answer;
