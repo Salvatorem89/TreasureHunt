@@ -3,12 +3,12 @@
     <string name="app_name">TreasureHunt</string>
     <string name="google_maps_API_key">AIzaSyCdyAGnBLOSkEjiqOpJTC3ufzFsbWg8Hj0</string>
     <string-array name="questions">
-        <item>Chi fondò Roma?</item>
-        <item>Qual è la capitale d'Italia?</item>
-        <item>Chi ha vinto il mondiale di calcio del 2006?</item>
-        <item>Come si chiama il protagonista dell'anime One Piece?</item>
-        <item>Chi ha scritto il libro "La fattoria degli animali"?</item>
-        <item>Chi scoprì l'America?</item>
-        <item>Che logo ha l'azienda Apple?</item>
+        <item>Chi fond&#242; Roma&#63;</item>
+        <item>Qual &#232; la capitale d&#145;Italia&#63;</item>
+        <item>Chi ha vinto il mondiale di calcio del 2006&#63;</item>
+        <item>Come si chiama il protagonista dell&#146;anime One Piece&#63;</item>
+        <item>Chi ha scritto il libro &#34;La fattoria degli animali&#34;&#63;</item>
+        <item>Chi scoprì l&#145;America&#63;</item>
+        <item>Che logo ha l&#145;azienda Apple&#63;</item>
     </string-array>
 </resources>
