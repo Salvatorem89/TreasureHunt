@@ -30,7 +30,7 @@ public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
     public void setUp() throws Exception {
         super.setUp();
         log = getActivity();
-        Thread.sleep(2000);
+        Thread.sleep(3000);
     }
 
     //controllo se l'utente inserisce un username o password non presente nel database
