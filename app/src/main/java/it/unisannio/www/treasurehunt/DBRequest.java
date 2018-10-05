@@ -50,7 +50,6 @@ class DBRequest {
 
             InputStream is = null;
             publishProgress(stato + "%");
-            //http post
             try{
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpGet httpget = new HttpGet(page);
@@ -70,6 +69,7 @@ class DBRequest {
                         stato =60;
                         publishProgress(stato + "%");
                         while ((line = reader.readLine()) != null) {
+                            Log.i("Buffer",line);
                             sb.append(line + "\n");
                         }
                         is.close();

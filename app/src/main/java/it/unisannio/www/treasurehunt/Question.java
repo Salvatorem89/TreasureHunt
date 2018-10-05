@@ -32,7 +32,6 @@ public class Question extends AppCompatActivity {
 
     public void ok(View view){
         String q = spinner.getSelectedItem().toString();
-        Log.i("Domanda ",q);
         Intent intent = new Intent("android.intent.action.CreateChallenge");
         intent.putExtra("question", q);
         intent.putExtra("lat", latitude);

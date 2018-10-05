@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -58,6 +60,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,48 +183,55 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         hideSoftKeyboard();
     }
 
-    public void endChallenge(View view){
-        String url = "http://treshunte.altervista.org/idPercorso.php";
-        DBRequest rq = new DBRequest(url);
-        String resp = "";
-        int stato = 0;
-        stato = rq.getStato();
-        int progress = 0;
-        while (stato != 100) {
-            if (stato != progress) {
-                bar.setProgress(stato);
-                progress = stato;
-            }
-
+    public void endChallenge(View view) {
+        if (isNetworkAvailable()) {
+            String url = "http://treshunte.altervista.org/idPercorso.php";
+            DBRequest rq = new DBRequest(url);
+            String resp = "";
+            int stato = 0;
             stato = rq.getStato();
-        }
-        resp = rq.getResult().substring(0,1);
-        Integer idPercorso = Integer.valueOf(resp)+1;
-
-        int idCheckpoint = 1;
-        for(Checkpoint checkpoint : percorso){
-            String quest = checkpoint.getQuestion().replace(" ", "_");
-
-            url = "http://treshunte.altervista.org/saveCheckpoint.php?idPercorso="+idPercorso+"&idCheckpoint="
-                    +idCheckpoint+"&lat="+checkpoint.getLatitude()+"&long="+checkpoint.getLongitude()+"&question="
-                    +quest;
-            rq = new DBRequest(url);
-            resp = "";
-            stato = 0;
-            stato = rq.getStato();
-            progress = 0;
+            int progress = 0;
             while (stato != 100) {
                 if (stato != progress) {
                     bar.setProgress(stato);
                     progress = stato;
                 }
+
                 stato = rq.getStato();
             }
-            resp = rq.getResult();
-            idCheckpoint++;
+            resp = rq.getResult().substring(0, 1);
+            Integer idPercorso = Integer.valueOf(resp) + 1;
+
+            int idCheckpoint = 1;
+
+            for (int i = 0; i < percorso.size(); i++) {
+                Checkpoint checkpoint = percorso.get(i);
+                String quest = checkpoint.getQuestion().replace(" ", "_");
+                url = "http://treshunte.altervista.org/saveCheckpoint.php?idPercorso=" + idPercorso + "&idCheckpoint="
+                        + idCheckpoint + "&lat=" + checkpoint.getLatitude() + "&long=" + checkpoint.getLongitude() + "&question="
+                        + quest;
+                rq = new DBRequest(url);
+                resp = "";
+                stato = 0;
+                stato = rq.getStato();
+                progress = 0;
+                while (stato != 100) {
+                    if (stato != progress) {
+                        bar.setProgress(stato);
+                        progress = stato;
+                    }
+                    stato = rq.getStato();
+                }
+                resp = rq.getResult();
+                idCheckpoint++;
+            }
+            Toast.makeText(getApplicationContext(), "Creazione sfida avvenuta con successo", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, MainActivity.class));
         }
-        Toast.makeText(getApplicationContext(),"Creazione sfida avvenuta con successo", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(this,MainActivity.class));
+        else {
+            Toast to = Toast.makeText(getApplicationContext(), "Tentativo di connessione fallito. Attiva connessione dati", Toast.LENGTH_LONG);
+            to.show();
+        }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {
@@ -465,4 +475,13 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         startActivity(new Intent(this,MainActivity.class));
     }
 
+    public void onBackPressed(){
+        super.onBackPressed();
+        startActivity(new Intent("android.intent.action.CreateChallenge"));
+    }
+    private boolean isNetworkAvailable(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }
