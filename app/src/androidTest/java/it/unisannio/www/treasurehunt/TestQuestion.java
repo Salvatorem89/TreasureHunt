@@ -41,6 +41,7 @@ public class TestQuestion extends ActivityInstrumentationTestCase2<Question> {
         Thread.sleep(2000);
     }
 
+    //testa la selezione di una domanda da inserire nell'indovinello
     @Test
     public void testSpinner()throws InterruptedException{
         spinner = question.findViewById(R.id.spinner);
