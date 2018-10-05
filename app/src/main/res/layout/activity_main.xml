@@ -10,8 +10,8 @@
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="200dp"
-        android:layout_marginLeft="200dp"
+        android:layout_marginLeft="260dp"
+        android:layout_marginStart="260dp"
         android:layout_marginTop="10dp"
         android:onClick="register"
         android:text="Register"
@@ -22,9 +22,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.013"
-        tools:text="Register"
-         />
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Register" />
 
     <Button
         android:id="@+id/sign"
@@ -47,8 +46,8 @@
 
     <Button
         android:id="@+id/create"
-        android:layout_width="168dp"
-        android:layout_height="87dp"
+        android:layout_width="124dp"
+        android:layout_height="69dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -58,7 +57,27 @@
         android:text="Create Challenge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.163"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.676" />
+        app:layout_constraintVertical_bias="0.666" />
+
+    <Button
+        android:id="@+id/play"
+        android:layout_width="108dp"
+        android:layout_height="62dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Play Challenge"
+        android:onClick="startChallenge"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.823"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.655" />
 </android.support.constraint.ConstraintLayout>

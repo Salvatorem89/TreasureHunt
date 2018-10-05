@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent("android.intent.action.Login"));
     }
 
+    public void startChallenge(View view){
+        startActivity(new Intent("android.intent.action.StartChallenge"));
+    }
+
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
