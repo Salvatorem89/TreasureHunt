@@ -1,5 +1,5 @@
 # TreasureHunt
-<p align= "center">![Alt text](https://github.com/Salvatorem89/TreasureHunt/blob/master/app/src/main/res/drawable/treasure_hunt.png)</p>
+<p align= "center"><img src="https://github.com/Salvatorem89/TreasureHunt/blob/master/app/src/main/res/drawable/treasure_hunt.png"></p>
 
 <br>Applicazione Android improntata sulla caccia al tesoro, integrando l'esercizio sportivo podistico con una componente ludica caratterizzata da quiz.
 
