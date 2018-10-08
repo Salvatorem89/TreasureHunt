@@ -1,12 +1,10 @@
 package it.unisannio.www.treasurehunt;
 
-import android.Manifest;
+import android.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,24 +15,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -56,22 +45,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.sql.Array;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
 
-import static android.app.PendingIntent.getActivity;
-
-
-public class StartChallenge extends AppCompatActivity implements OnMapReadyCallback,
+public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener{
 
     @Override
@@ -95,12 +72,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
             }
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
-
-            try {
-                init();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            init();
         }
     }
 
@@ -119,10 +91,10 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
     //widgets
     private AutoCompleteTextView mSearchText;
     private ImageView mGps;
-    //, mInfo, mPlacePicker;
 
 
     //vars
+    private int nextCheckpoint;
     private Boolean mLocationPermissionsGranted = false;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -136,11 +108,12 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_challenge);
+        nextCheckpoint = 1;
+        setContentView(R.layout.activity_challenge);
 
         mGps = findViewById(R.id.ic_gps);
-        if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("percorso")) {
-            percorso = (ArrayList<Checkpoint>) getIntent().getExtras().get("percorso");
+        if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("percorsoScelto")) {
+            percorso = (ArrayList<Checkpoint>) getIntent().getExtras().get("percorsoScelto");
         }
         else {
             percorso = new ArrayList<Checkpoint>();
@@ -148,9 +121,8 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
         getLocationPermission();
     }
 
-    private void init() throws JSONException {
+    private void init(){
         Log.d(TAG, "init: initializing");
-
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
@@ -160,15 +132,41 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                ArrayList<Checkpoint> percorsoScelto = new ArrayList<Checkpoint>();
-                for(Checkpoint c : percorso){
-                    if(c.getIdRun()== Integer.parseInt(marker.getTitle()))
-                        percorsoScelto.add(c);
-                }
-                Intent intent = new Intent("android.intent.action.Challenge");
-                intent.putExtra("percorsoScelto", percorsoScelto);
-                startActivity(intent);
-                return false;
+                String[] risposte =new String[] {"risposta 1","risposte 2", "risposte corretta"};
+                AlertDialog.Builder builder = new AlertDialog.Builder((getApplicationContext()));
+                builder.setMessage(percorso.get(nextCheckpoint-1).getQuestion());
+                builder.setItems(risposte, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.i("Controllo Marcker", ""+which);
+                        Log.e("value is", "" + which);
+                        switch (which) {
+                            case 0:
+                            {
+                                nextCheckpoint++;
+                                setCheckpoint(mMap,nextCheckpoint);
+                                Toast.makeText(getApplicationContext(),"Risposta errata",Toast.LENGTH_LONG).show();
+                                break;
+                            }
+                            case 1:
+                            {
+                                nextCheckpoint++;
+                                setCheckpoint(mMap,nextCheckpoint);
+                                Toast.makeText(getApplicationContext(),"Risposta errata",Toast.LENGTH_LONG).show();
+                                break;
+                            }
+                            case 2:
+                            {
+                                nextCheckpoint++;
+                                setCheckpoint(mMap,nextCheckpoint);
+                                Toast.makeText(getApplicationContext(),"Risposta corretta",Toast.LENGTH_LONG).show();
+                                break;
+                            }
+                        }
+                    }
+                });
+                builder.show();
+                return  true;
             }
         });
         mGps.setOnClickListener(new View.OnClickListener() {
@@ -178,70 +176,26 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
                 getDeviceLocation();
             }
         });
-        setMarker();
+        setCheckpoint(mMap,nextCheckpoint);
         hideSoftKeyboard();
     }
 
-    private void setMarker() throws JSONException {
-        if(!isNetworkAvailable())
-        {
-            Toast to = Toast.makeText(getApplicationContext(), "Tentativo di connessione fallito. Attiva connessione dati", Toast.LENGTH_LONG);
-            to.show();
-        }
-        else{
-            String url = "http://treshunte.altervista.org/startchallenge.php";
-            DBResultCheckpoint rq = new DBResultCheckpoint(url);
-            String resp;
-            int stato = 0;
-            stato = rq.getStato();
-            int progress = 0;
-            while (stato != 100) {
-                if (stato != progress) {
-                    progress = stato;
-                }
-                stato = rq.getStato();
-            }
-            resp = rq.getResult();
-            percorso = getCheckpoints(resp);
-            Checkpoint c=new Checkpoint();
-            setCheckpoint(mMap);
+    private void setCheckpoint(GoogleMap googleMap, int i){
 
-        }
-    }
-    private void setCheckpoint(GoogleMap googleMap){
         for(Checkpoint checkpoint : percorso){
-            if(checkpoint.getIdCheckpoint()==1) {
-                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(checkpoint.getLatitude(), checkpoint.getLongitude())).title("" + checkpoint.getIdRun());
+            if(checkpoint.getIdCheckpoint()==i) {
+                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(checkpoint.getLatitude(), checkpoint.getLongitude())).title("" + checkpoint.getIdRun()).visible(true);
+                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
+                googleMap.addMarker(markerOptions);
+            }
+            else{
+                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(checkpoint.getLatitude(), checkpoint.getLongitude())).title("" + checkpoint.getIdRun()).visible(false);
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker));
                 googleMap.addMarker(markerOptions);
             }
         }
 
     }
-    private ArrayList<Checkpoint> getCheckpoints(String resp) throws JSONException {
-        StringTokenizer st = new StringTokenizer(resp,"}");
-        ArrayList<Checkpoint> challenges = new ArrayList<Checkpoint>();
-        while (st.hasMoreElements()){
-            String dbRow = st.nextToken()+"}";
-            JSONObject obj = new JSONObject(dbRow);
-            Checkpoint checkpoint = new Checkpoint(obj.getInt("idPercorso"), obj.getInt("idCheckpoint"),
-                    obj.getDouble("latitudine"),obj.getDouble("longitudine"), obj.getString("question"));
-            challenges.add(checkpoint);
-        }
-        return challenges;
-    }
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this, data);
-
-                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                        .getPlaceById(mGoogleApiClient, place.getId());
-                placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-            }
-        }
-    }
-
 
     private void getDeviceLocation(){
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
@@ -265,7 +219,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
 
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
-                            Toast.makeText(StartChallenge.this, "unable to get current location", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Challenge.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -324,13 +278,13 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.create);
 
-        mapFragment.getMapAsync(StartChallenge.this);
+        mapFragment.getMapAsync(Challenge.this);
     }
 
     private void getLocationPermission(){
         Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
+                android.Manifest.permission.ACCESS_COARSE_LOCATION};
 
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
@@ -449,6 +403,5 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-    
-}
 
+}

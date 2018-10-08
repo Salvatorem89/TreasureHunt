@@ -1,15 +1,7 @@
 package it.unisannio.www.treasurehunt;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.content.Intent;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -17,26 +9,34 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-class DBRequest {
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * Created by SUPER INGEGNERE on 08/10/2018.
+ */
+
+public class DBResultCheckpoint {
     private String url;
-    public String textviewDatiRicevuti = "";
+    public String viewDatiRicevuti = "";
     public int stato;
 
-    public DBRequest(String url){
+    public DBResultCheckpoint(String url){
         this.url = url;
         DBConnection con = new DBConnection();
         con.execute(url);
-
     }
+
     public String getResult(){
-        return textviewDatiRicevuti;
+        return viewDatiRicevuti;
     }
 
     public int getStato() {
         return stato;
     }
 
-    class DBConnection extends AsyncTask<String,String,String>{
+    class DBConnection extends AsyncTask<String,String,String> {
 
         public DBConnection(){
 
@@ -61,6 +61,7 @@ class DBRequest {
                 stato =50;
                 publishProgress(stato + "%");
                 if(is != null){
+
                     //converto la risposta in stringa
                     try{
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
@@ -68,9 +69,13 @@ class DBRequest {
                         String line = null;
                         stato =60;
                         publishProgress(stato + "%");
-                        while ((line = reader.readLine()) != null) {
-                            Log.i("Buffer",line);
-                            sb.append(line+"\n");
+                        while (true) {
+                            int data=reader.read();
+                            if(data==-1){
+                                break;
+                            }else{
+                                sb.append((char)data);
+                            }
                         }
                         is.close();
 
@@ -91,11 +96,11 @@ class DBRequest {
             //convert response to string
 
 
-            Log.i("SendQUERY", result);
-            textviewDatiRicevuti = result;
+            Log.i("SendQUERY", result.toString());
+            viewDatiRicevuti = result;
             stato = 100;
             publishProgress(stato + "%");
-            return result;
+            return viewDatiRicevuti.toString();
         }
 
         @Override
@@ -107,7 +112,8 @@ class DBRequest {
         @Override
         protected void onPostExecute(String result) {
             // aggiorno la textview con il risultato ottenuto
-            textviewDatiRicevuti = result;
+            viewDatiRicevuti = result;
         }
+
     }
 }

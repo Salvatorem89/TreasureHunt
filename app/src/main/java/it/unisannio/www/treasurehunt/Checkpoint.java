@@ -3,18 +3,16 @@ package it.unisannio.www.treasurehunt;
 import java.io.Serializable;
 
 public class Checkpoint implements Serializable{
-    private int idCheckpoint, idRun;
+    private int idCheckpoint, idPercorso;
     private double latitude, longitude;
-    private String question, answer;
+    private String question;
 
-    public Checkpoint(int idCheckpoint, int idRun, double latitude, double longitude, String question, String answer) {
-
+    public Checkpoint(int idPercorso, int idCheckpoint, double latitude, double longitude, String question) {
+        this.idPercorso = idPercorso;
         this.idCheckpoint = idCheckpoint;
-        this.idRun = idRun;
         this.latitude = latitude;
         this.longitude = longitude;
         this.question = question;
-        this.answer = answer;
     }
 
     public Checkpoint(){
@@ -30,11 +28,11 @@ public class Checkpoint implements Serializable{
     }
 
     public int getIdRun() {
-        return idRun;
+        return idPercorso;
     }
 
     public void setIdRun(int idRun) {
-        this.idRun = idRun;
+        this.idPercorso = idRun;
     }
 
     public double getLatitude() {
@@ -60,15 +58,5 @@ public class Checkpoint implements Serializable{
     public void setQuestion(String question) {
         this.question = question;
     }
-
-    public String getAnswer() {
-        return answer;
-    }
-
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-
 }
 
