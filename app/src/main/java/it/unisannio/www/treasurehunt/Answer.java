@@ -30,10 +30,7 @@ public class Answer extends AppCompatActivity {
     private ArrayList<Checkpoint> percorso;
     private Checkpoint checkpoint;
     private int nextId;
-    private LinearLayout linearLayout;
-    private String s = "ciao";
 
-    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,15 +38,10 @@ public class Answer extends AppCompatActivity {
 
         String resp = "";
         risposta1 = new CheckBox(this);
-        risposta1.setId(1);
-        risposta2 = new CheckBox(this);
-        risposta2.setId(2);
-        risposta3 = new CheckBox(this);
-        risposta3.setId(3);
+        //risposta2 = new CheckBox(this);
+        //risposta3 = new CheckBox(this);
         conferma = findViewById(R.id.confirm);
         cancella = findViewById(R.id.back);
-        linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         percorso = (ArrayList<Checkpoint>) getIntent().getExtras().get("percorso");
         checkpoint = (Checkpoint) getIntent().getExtras().get("checkpoint");
@@ -77,18 +69,17 @@ public class Answer extends AppCompatActivity {
 
         try {
             ArrayList<String> answers = getAnswers(resp);
+
+            risposta1.setText(answers.get(0));
+            //risposta2.setText(answers.get(1));
+            //risposta3.setText(answers.get(2));
             Log.i("risposta", answers.get(0));
             Log.i("risposta", answers.get(1));
             Log.i("risposta", answers.get(2));
-            risposta1.setText(answers.get(0));
-            risposta1.setOnClickListener(getOnClick(risposta1));
-            linearLayout.addView(risposta1);
-            risposta2.setText(answers.get(1));
-            risposta2.setOnClickListener(getOnClick(risposta2));
-            linearLayout.addView(risposta2);
-            risposta3.setText(answers.get(2));
-            risposta3.setOnClickListener(getOnClick(risposta3));
-            linearLayout.addView(risposta3);
+            this.setContentView(risposta1);
+            Log.i("risposta", answers.get(0));
+            Log.i("risposta", answers.get(1));
+            Log.i("risposta", answers.get(2));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -104,9 +95,6 @@ public class Answer extends AppCompatActivity {
         answers.add(answer1);
         answers.add(answer2);
         answers.add(correctAnswer);
-        Log.i("risposta", answers.get(0));
-        Log.i("risposta", answers.get(1));
-        Log.i("risposta", answers.get(2));
         return answers;
     }
 
