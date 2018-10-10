@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -22,14 +24,14 @@ import java.util.StringTokenizer;
 
 public class Answer extends AppCompatActivity {
 
-    private CheckBox risposta1;
-    private CheckBox risposta2;
-    private CheckBox risposta3;
-    private Button conferma;
-    private Button cancella;
+    private RadioButton risposta1;
+    private RadioButton risposta2;
+    private RadioButton risposta3;
+    private RadioGroup answerRadioGroup;
     private ArrayList<Checkpoint> percorso;
     private Checkpoint checkpoint;
     private int nextId;
+    private long start;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +39,15 @@ public class Answer extends AppCompatActivity {
         setContentView(R.layout.activity_answer);
 
         String resp = "";
-        risposta1 = new CheckBox(this);
-        //risposta2 = new CheckBox(this);
-        //risposta3 = new CheckBox(this);
-        conferma = findViewById(R.id.confirm);
-        cancella = findViewById(R.id.back);
+        risposta1 = new RadioButton(this);
+        risposta2 = new RadioButton(this);
+        risposta3 = new RadioButton(this);
+        answerRadioGroup = new RadioGroup(this);
 
         percorso = (ArrayList<Checkpoint>) getIntent().getExtras().get("percorso");
         checkpoint = (Checkpoint) getIntent().getExtras().get("checkpoint");
         nextId = getIntent().getExtras().getInt("nextId");
+        start = getIntent().getExtras().getLong("start");
 
         if(!isNetworkAvailable())
         {
@@ -71,15 +73,55 @@ public class Answer extends AppCompatActivity {
             ArrayList<String> answers = getAnswers(resp);
 
             risposta1.setText(answers.get(0));
-            //risposta2.setText(answers.get(1));
-            //risposta3.setText(answers.get(2));
-            Log.i("risposta", answers.get(0));
-            Log.i("risposta", answers.get(1));
-            Log.i("risposta", answers.get(2));
-            this.setContentView(risposta1);
-            Log.i("risposta", answers.get(0));
-            Log.i("risposta", answers.get(1));
-            Log.i("risposta", answers.get(2));
+            risposta2.setText(answers.get(1));
+            risposta3.setText(answers.get(2));
+            answerRadioGroup.addView(risposta1);
+            answerRadioGroup.addView(risposta2);
+            answerRadioGroup.addView(risposta3);
+
+            this.setContentView(answerRadioGroup);
+
+            risposta1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Toast.makeText(getApplicationContext(), "Risposta errata", Toast.LENGTH_LONG).show();
+
+                    Intent intent = new Intent("android.intent.action.Challenge");
+                    intent.putExtra("percorsoScelto", percorso);
+                    intent.putExtra("nextId", nextId);
+                    intent.putExtra("start", start - 30000);
+                    startActivity(intent);
+                }
+            });
+
+            risposta2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Toast.makeText(getApplicationContext(), "Risposta errata", Toast.LENGTH_LONG).show();
+
+                    Intent intent = new Intent("android.intent.action.Challenge");
+                    intent.putExtra("percorsoScelto", percorso);
+                    intent.putExtra("nextId", nextId);
+                    intent.putExtra("start", start - 30000);
+                    startActivity(intent);
+                }
+            });
+
+            risposta3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Toast.makeText(getApplicationContext(), "Risposta corretta", Toast.LENGTH_LONG).show();
+
+                    Intent intent = new Intent("android.intent.action.Challenge");
+                    intent.putExtra("percorsoScelto", percorso);
+                    intent.putExtra("nextId", nextId);
+                    intent.putExtra("start", start);
+                    startActivity(intent);
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -46,6 +46,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
@@ -102,13 +103,28 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
     private Marker mMarker;
+    private long start;
 
     private ArrayList<Checkpoint> percorso;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nextCheckpoint = 1;
+        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("nextId")){
+            nextCheckpoint = getIntent().getExtras().getInt("nextId")+1;
+        }
+        else {
+            nextCheckpoint = 1;
+        }
+
+        if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("start")){
+            start = getIntent().getExtras().getInt("start");
+        }
+        else {
+            start = System.currentTimeMillis();
+        }
+
+
         setContentView(R.layout.activity_challenge);
 
         mGps = findViewById(R.id.ic_gps);
@@ -137,6 +153,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
                 intent.putExtra("percorso", percorso);
                 intent.putExtra("nextId", nextCheckpoint);
                 intent.putExtra("checkpoint", percorso.get(nextCheckpoint-1));
+                intent.putExtra("start", start);
                 startActivity(intent);
 
                 return  false;
@@ -149,7 +166,14 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
                 getDeviceLocation();
             }
         });
-        setCheckpoint(mMap,nextCheckpoint);
+        if(nextCheckpoint<=percorso.size())
+            setCheckpoint(mMap,nextCheckpoint);
+        else{
+            double tempoTotale = (double) (System.currentTimeMillis()-start) / 1000;
+            Toast.makeText(getApplicationContext(), "HAI COMPLETATO LA SFIDA in " + tempoTotale + " secondi", Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, MainActivity.class));
+        }
+
         hideSoftKeyboard();
     }
 
