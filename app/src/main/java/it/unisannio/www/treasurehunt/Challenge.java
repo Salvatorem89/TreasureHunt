@@ -132,41 +132,14 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                String[] risposte =new String[] {"risposta 1","risposte 2", "risposte corretta"};
-                AlertDialog.Builder builder = new AlertDialog.Builder((getApplicationContext()));
-                builder.setMessage(percorso.get(nextCheckpoint-1).getQuestion());
-                builder.setItems(risposte, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.i("Controllo Marcker", ""+which);
-                        Log.e("value is", "" + which);
-                        switch (which) {
-                            case 0:
-                            {
-                                nextCheckpoint++;
-                                setCheckpoint(mMap,nextCheckpoint);
-                                Toast.makeText(getApplicationContext(),"Risposta errata",Toast.LENGTH_LONG).show();
-                                break;
-                            }
-                            case 1:
-                            {
-                                nextCheckpoint++;
-                                setCheckpoint(mMap,nextCheckpoint);
-                                Toast.makeText(getApplicationContext(),"Risposta errata",Toast.LENGTH_LONG).show();
-                                break;
-                            }
-                            case 2:
-                            {
-                                nextCheckpoint++;
-                                setCheckpoint(mMap,nextCheckpoint);
-                                Toast.makeText(getApplicationContext(),"Risposta corretta",Toast.LENGTH_LONG).show();
-                                break;
-                            }
-                        }
-                    }
-                });
-                builder.show();
-                return  true;
+                String question = percorso.get(nextCheckpoint-1).getQuestion();
+                Intent intent = new Intent("android.intent.action.Answer");
+                intent.putExtra("percorso", percorso);
+                intent.putExtra("nextId", nextCheckpoint);
+                intent.putExtra("checkpoint", percorso.get(nextCheckpoint-1));
+                startActivity(intent);
+
+                return  false;
             }
         });
         mGps.setOnClickListener(new View.OnClickListener() {

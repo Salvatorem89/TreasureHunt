@@ -37,3 +37,8 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 }
+
+
+task myTest {
+    project.extensions.add("android.testInstrumentationRunnerArguments.class", "it.unisannio.www.treasurehunt.TestLogin")
+}

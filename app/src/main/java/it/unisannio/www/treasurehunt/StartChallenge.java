@@ -203,7 +203,6 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
             }
             resp = rq.getResult();
             percorso = getCheckpoints(resp);
-            Checkpoint c=new Checkpoint();
             setCheckpoint(mMap);
 
         }
