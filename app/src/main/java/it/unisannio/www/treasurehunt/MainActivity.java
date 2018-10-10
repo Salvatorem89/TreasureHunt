@@ -66,18 +66,12 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void register(View view){
-        startActivity(new Intent("android.intent.action.Registration"));
-    }
-
-    public void login(View view){
-        startActivity(new Intent("android.intent.action.Login"));
-    }
-
     public void startChallenge(View view){
         startActivity(new Intent("android.intent.action.StartChallenge"));
     }
-
+    public void logOut(View view){
+        startActivity(new Intent(this, Login.class));
+    }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();

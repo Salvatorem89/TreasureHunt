@@ -14,6 +14,7 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -71,15 +72,19 @@ public class Answer extends AppCompatActivity {
 
         try {
             ArrayList<String> answers = getAnswers(resp);
-
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+            TextView textView = new TextView(this);
+            textView.setText(checkpoint.getQuestion().replace("_", " "));
             risposta1.setText(answers.get(0));
             risposta2.setText(answers.get(1));
             risposta3.setText(answers.get(2));
             answerRadioGroup.addView(risposta1);
             answerRadioGroup.addView(risposta2);
             answerRadioGroup.addView(risposta3);
-
-            this.setContentView(answerRadioGroup);
+            linearLayout.addView(textView);
+            linearLayout.addView(answerRadioGroup);
+            this.setContentView(linearLayout);
 
             risposta1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -138,15 +143,6 @@ public class Answer extends AppCompatActivity {
         answers.add(answer2);
         answers.add(correctAnswer);
         return answers;
-    }
-
-    private View.OnClickListener getOnClick(final Button button){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("Controllo click", "Click avvenuto");
-            }
-        };
     }
 
     private boolean isNetworkAvailable(){

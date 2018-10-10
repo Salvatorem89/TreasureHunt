@@ -68,9 +68,13 @@ class DBRequest {
                         String line = null;
                         stato =60;
                         publishProgress(stato + "%");
-                        while ((line = reader.readLine()) != null) {
-                            Log.i("Buffer",line);
-                            sb.append(line+"\n");
+                        while (true) {
+                            int data=reader.read();
+                            if(data==-1){
+                                break;
+                            }else{
+                                sb.append((char)data);
+                            }
                         }
                         is.close();
 
@@ -101,7 +105,6 @@ class DBRequest {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            Log.i("Stato", stato + "%");
         }
 
         @Override

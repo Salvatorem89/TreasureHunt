@@ -57,7 +57,7 @@ public class Login extends AppCompatActivity {
                 }
                 resp = rq.getResult();
                 Toast to = Toast.makeText(getApplicationContext(), resp , Toast.LENGTH_LONG);
-                if (resp.equalsIgnoreCase("Login avvenuto con successo\n")) {
+                if (resp.equalsIgnoreCase("Login avvenuto con successo")) {
                     to.show();
                     startActivity(new Intent(this,MainActivity.class));
 
