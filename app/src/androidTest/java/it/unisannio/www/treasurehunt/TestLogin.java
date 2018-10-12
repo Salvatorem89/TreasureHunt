@@ -14,9 +14,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 
-/**
- * Created by Enrico on 28/09/2018.
- */
+//Test sulla activity Login
+
 
 public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
 

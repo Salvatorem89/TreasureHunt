@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TreasureHunt</string>
+    <string name="desc">Move Camera</string>
     <string name="google_maps_API_key">AIzaSyCdyAGnBLOSkEjiqOpJTC3ufzFsbWg8Hj0</string>
     <string-array name="questions">
         <item>Chi fond&#242; Roma&#63;</item>
