@@ -13,6 +13,7 @@ public class Question extends AppCompatActivity {
     private double latitude,longitude;
     private Spinner spinner;
     private ArrayList<Checkpoint> percorso;
+    String user = getIntent().getExtras().getString("user");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +28,9 @@ public class Question extends AppCompatActivity {
     }
 
     public void cancel(View view){
-        startActivity(new Intent("android.intent.action.CreateChallenge"));
+        Intent intent = new Intent("android.intent.action.CreateChallenge");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
 
     public void ok(View view){
@@ -37,6 +40,7 @@ public class Question extends AppCompatActivity {
         intent.putExtra("lat", latitude);
         intent.putExtra("long", longitude);
         intent.putExtra("percorso",percorso);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 }

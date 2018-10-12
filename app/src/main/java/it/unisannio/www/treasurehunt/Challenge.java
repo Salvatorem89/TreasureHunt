@@ -86,7 +86,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
     private GoogleApiClient mGoogleApiClient;
     private long start;
     private Location posizioneAttuale;
-
+    String user = getIntent().getExtras().getString("user");
     private ArrayList<Checkpoint> percorso;
 
     @Override
@@ -145,6 +145,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
                     intent.putExtra("nextId", nextCheckpoint);
                     intent.putExtra("checkpoint", percorso.get(nextCheckpoint - 1));
                     intent.putExtra("start", start);
+                    intent.putExtra("user", user);
                     startActivity(intent);
                 }
                 return  false;
@@ -161,10 +162,24 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
             setCheckpoint(mMap,nextCheckpoint);
         else{
             double tempoTotale = (double) (System.currentTimeMillis()-start) / 1000;
+            String url = "http://treshunte.altervista.org/time.php?user="+user+"&idPercorso"+percorso.get(nextCheckpoint-1).getIdRun()+"&time="+tempoTotale;
+            DBRequest rq = new DBRequest(url);
+            String resp;
+            int stato = 0;
+            stato = rq.getStato();
+            int progress = 0;
+            while (stato != 100) {
+                if (stato != progress) {
+                    progress = stato;
+                }
+                stato = rq.getStato();
+            }
             Log.i("Tempo Totale",""+tempoTotale);
             Toast.makeText(getApplicationContext(), "HAI COMPLETATO LA SFIDA in " + tempoTotale + " secondi", Toast.LENGTH_LONG).show();
             Thread.sleep(3000);
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent("android.intent.action.HOME");
+            intent.putExtra("user", user);
+            startActivity(intent);
         }
 
         hideSoftKeyboard();
@@ -297,12 +312,16 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
 
 
     public void resume(View view){
-        startActivity(new Intent(this,MainActivity.class));
+        Intent intent = new Intent("android.intent.action.HOME");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
 
     public void onBackPressed(){
         super.onBackPressed();
-        startActivity(new Intent("android.intent.action.HOME"));
+        Intent intent = new Intent("android.intent.action.HOME");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

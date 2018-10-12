@@ -80,7 +80,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private GoogleApiClient mGoogleApiClient;
-
+    String user = getIntent().getExtras().getString("user");
     private ArrayList<Checkpoint> percorso;
 
     @Override
@@ -122,6 +122,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                 intent.putExtra("percorso", percorso);
                 intent.putExtra("lat", point.latitude);
                 intent.putExtra("long", point.longitude);
+                intent.putExtra("user", user);
                 startActivity(intent);
             }
         });
@@ -177,7 +178,9 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                 idCheckpoint++;
             }
             Toast.makeText(getApplicationContext(), "Creazione sfida avvenuta con successo", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(this, MainActivity.class));
+            Intent intent = new Intent("android.intent.action.Home");
+            intent.putExtra("user", user);
+            startActivity(intent);
         }
         else {
             Toast to = Toast.makeText(getApplicationContext(), "Tentativo di connessione fallito. Attiva connessione dati", Toast.LENGTH_LONG);
@@ -298,12 +301,16 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
 
     }
     public void cancelChallenge(View view){
-        startActivity(new Intent(this,MainActivity.class));
+        Intent intent = new Intent("android.intent.action.HOME");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
 
     public void onBackPressed(){
         super.onBackPressed();
-        startActivity(new Intent("android.intent.action.CreateChallenge"));
+        Intent intent = new Intent("android.intent.action.CreateChallenge");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

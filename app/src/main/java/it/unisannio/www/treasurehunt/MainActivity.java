@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateChallenge";
     private static final int ERROR_DIALOG_REQUEST =9001;
+    String user = getIntent().getExtras().getString("user");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
         btnMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, CreateChallenge.class);
+                Intent intent = new Intent("android.intent.action.CreateChallenge");
+                intent.putExtra("user", user);
                 startActivity(intent);
             }
         });
@@ -67,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startChallenge(View view){
-        startActivity(new Intent("android.intent.action.StartChallenge"));
+        Intent intent = new Intent("android.intent.action.StartChallenge");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
     public void logOut(View view){
         startActivity(new Intent(this, Login.class));

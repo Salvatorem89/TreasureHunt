@@ -7,8 +7,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -91,6 +93,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private GoogleApiClient mGoogleApiClient;
+    String user = getIntent().getExtras().getString("user");
 
     private ArrayList<Checkpoint> percorso;
 
@@ -128,6 +131,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
                 }
                 Intent intent = new Intent("android.intent.action.Challenge");
                 intent.putExtra("percorsoScelto", percorsoScelto);
+                intent.putExtra("user", user);
                 startActivity(intent);
                 return false;
             }
@@ -296,12 +300,16 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
     }
 
     public void resume(View view){
-        startActivity(new Intent(this,MainActivity.class));
+        Intent intent = new Intent("android.intent.action.Home");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
 
     public void onBackPressed(){
         super.onBackPressed();
-        startActivity(new Intent("android.intent.action.HOME"));
+        Intent intent = new Intent("android.intent.action.Home");
+        intent.putExtra("user", user);
+        startActivity(intent);
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

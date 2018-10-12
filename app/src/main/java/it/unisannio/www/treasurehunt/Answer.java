@@ -33,6 +33,7 @@ public class Answer extends AppCompatActivity {
     private Checkpoint checkpoint;
     private int nextId;
     private long start;
+    private  String user = getIntent().getExtras().getString("user");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,7 @@ public class Answer extends AppCompatActivity {
                     intent.putExtra("percorsoScelto", percorso);
                     intent.putExtra("nextId", nextId);
                     intent.putExtra("start", start - 30000);
+                    intent.putExtra("user", user);
                     startActivity(intent);
                 }
             });
@@ -110,6 +112,7 @@ public class Answer extends AppCompatActivity {
                     intent.putExtra("percorsoScelto", percorso);
                     intent.putExtra("nextId", nextId);
                     intent.putExtra("start", start - 30000);
+                    intent.putExtra("user", user);
                     startActivity(intent);
                 }
             });
@@ -124,6 +127,7 @@ public class Answer extends AppCompatActivity {
                     intent.putExtra("percorsoScelto", percorso);
                     intent.putExtra("nextId", nextId);
                     intent.putExtra("start", start);
+                    intent.putExtra("user", user);
                     startActivity(intent);
                 }
             });

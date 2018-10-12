@@ -59,7 +59,9 @@ public class Login extends AppCompatActivity {
                 Toast to = Toast.makeText(getApplicationContext(), resp , Toast.LENGTH_LONG);
                 if (resp.equalsIgnoreCase("Login avvenuto con successo")) {
                     to.show();
-                    startActivity(new Intent(this,MainActivity.class));
+                    Intent intent = new Intent("android.intent.action.Home");
+                    intent.putExtra("user", user);
+                    startActivity(intent);
 
                 }
                 else {
