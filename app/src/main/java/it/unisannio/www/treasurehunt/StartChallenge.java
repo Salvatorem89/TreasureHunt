@@ -93,7 +93,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private GoogleApiClient mGoogleApiClient;
-    String user = getIntent().getExtras().getString("user");
+    private String user;
 
     private ArrayList<Checkpoint> percorso;
 
@@ -109,6 +109,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
         else {
             percorso = new ArrayList<Checkpoint>();
         }
+        user = getIntent().getExtras().getString("user");
         getLocationPermission();
     }
 
@@ -300,14 +301,14 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
     }
 
     public void resume(View view){
-        Intent intent = new Intent("android.intent.action.Home");
+        Intent intent = new Intent("android.intent.action.HOME");
         intent.putExtra("user", user);
         startActivity(intent);
     }
 
     public void onBackPressed(){
         super.onBackPressed();
-        Intent intent = new Intent("android.intent.action.Home");
+        Intent intent = new Intent("android.intent.action.HOME");
         intent.putExtra("user", user);
         startActivity(intent);
     }

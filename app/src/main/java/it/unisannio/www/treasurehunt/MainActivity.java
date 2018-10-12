@@ -19,12 +19,13 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "CreateChallenge";
     private static final int ERROR_DIALOG_REQUEST =9001;
-    String user = getIntent().getExtras().getString("user");
+    private String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        user = getIntent().getExtras().getString("user");
         if(!isNetworkAvailable())
         {
             Toast to = Toast.makeText(getApplicationContext(), "Tentativo di connessione fallito. Attiva connessione dati", Toast.LENGTH_LONG);

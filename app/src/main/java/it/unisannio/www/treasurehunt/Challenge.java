@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -86,7 +85,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
     private GoogleApiClient mGoogleApiClient;
     private long start;
     private Location posizioneAttuale;
-    String user = getIntent().getExtras().getString("user");
+    private String user;
     private ArrayList<Checkpoint> percorso;
 
     @Override
@@ -98,7 +97,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
         else {
             nextCheckpoint = 1;
         }
-
+        user = getIntent().getExtras().getString("user");
         if(getIntent().getExtras() != null && getIntent().getExtras().containsKey("start")){
             start = getIntent().getExtras().getLong("start");
         }
@@ -162,7 +161,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
             setCheckpoint(mMap,nextCheckpoint);
         else{
             double tempoTotale = (double) (System.currentTimeMillis()-start) / 1000;
-            String url = "http://treshunte.altervista.org/time.php?user="+user+"&idPercorso"+percorso.get(nextCheckpoint-1).getIdRun()+"&time="+tempoTotale;
+            String url = "http://treshunte.altervista.org/time.php?user="+user+"&idPercorso="+percorso.get(0).getIdRun()+"&time="+tempoTotale;
             DBRequest rq = new DBRequest(url);
             String resp;
             int stato = 0;
@@ -174,7 +173,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
                 }
                 stato = rq.getStato();
             }
-            Log.i("Tempo Totale",""+tempoTotale);
+            resp = rq.getResult();
             Toast.makeText(getApplicationContext(), "HAI COMPLETATO LA SFIDA in " + tempoTotale + " secondi", Toast.LENGTH_LONG).show();
             Thread.sleep(3000);
             Intent intent = new Intent("android.intent.action.HOME");
@@ -218,10 +217,6 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
                             posizioneAttuale = currentLocation;
-                            //moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                             //       DEFAULT_ZOOM,
-                             //       "My Location");
-
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(Challenge.this, "unable to get current location", Toast.LENGTH_SHORT).show();

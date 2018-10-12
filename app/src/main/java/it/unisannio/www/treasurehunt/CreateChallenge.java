@@ -80,7 +80,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private GoogleApiClient mGoogleApiClient;
-    String user = getIntent().getExtras().getString("user");
+    private String user;
     private ArrayList<Checkpoint> percorso;
 
     @Override
@@ -94,6 +94,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         else {
             percorso = new ArrayList<Checkpoint>();
         }
+        user = getIntent().getExtras().getString("user");
         getLocationPermission();
         if(getIntent().getExtras()!=null){
             Checkpoint checkpoint = new Checkpoint();
@@ -178,7 +179,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                 idCheckpoint++;
             }
             Toast.makeText(getApplicationContext(), "Creazione sfida avvenuta con successo", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent("android.intent.action.Home");
+            Intent intent = new Intent("android.intent.action.HOME");
             intent.putExtra("user", user);
             startActivity(intent);
         }

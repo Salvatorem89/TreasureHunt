@@ -33,7 +33,7 @@ public class Answer extends AppCompatActivity {
     private Checkpoint checkpoint;
     private int nextId;
     private long start;
-    private  String user = getIntent().getExtras().getString("user");
+    private  String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,7 @@ public class Answer extends AppCompatActivity {
         checkpoint = (Checkpoint) getIntent().getExtras().get("checkpoint");
         nextId = getIntent().getExtras().getInt("nextId");
         start = getIntent().getExtras().getLong("start");
+        user = getIntent().getExtras().getString("user");
 
         if(!isNetworkAvailable())
         {

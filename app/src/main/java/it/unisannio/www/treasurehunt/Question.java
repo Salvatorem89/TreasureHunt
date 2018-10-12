@@ -13,7 +13,7 @@ public class Question extends AppCompatActivity {
     private double latitude,longitude;
     private Spinner spinner;
     private ArrayList<Checkpoint> percorso;
-    String user = getIntent().getExtras().getString("user");
+    private String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +25,7 @@ public class Question extends AppCompatActivity {
             latitude= getIntent().getExtras().getDouble("lat");
             longitude=getIntent().getExtras().getDouble("long");
         }
+        user = getIntent().getExtras().getString("user");
     }
 
     public void cancel(View view){
