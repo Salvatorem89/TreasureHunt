@@ -60,7 +60,7 @@ public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
         });
 
         Thread.sleep(2000);
-        onView(withText("Username o Password errate\n")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        onView(withText("Username o Password errate")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
 
     }
 
