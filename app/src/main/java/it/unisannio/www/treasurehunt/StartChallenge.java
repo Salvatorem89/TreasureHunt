@@ -211,7 +211,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
+                            Log.i("task results", "" + ((Location) task.getResult()).getLatitude());
                             moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                     DEFAULT_ZOOM,
                                     "My Location");

@@ -175,7 +175,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
             }
             resp = rq.getResult();
             Toast.makeText(getApplicationContext(), "HAI COMPLETATO LA SFIDA in " + tempoTotale + " secondi", Toast.LENGTH_LONG).show();
-            Thread.sleep(3000);
+            Thread.sleep(2000);
             Intent intent = new Intent("android.intent.action.HOME");
             intent.putExtra("user", user);
             startActivity(intent);

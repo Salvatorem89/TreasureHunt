@@ -1,8 +1,11 @@
 package it.unisannio.www.treasurehunt;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -31,22 +34,10 @@ public class MainActivity extends AppCompatActivity {
             Toast to = Toast.makeText(getApplicationContext(), "Tentativo di connessione fallito. Attiva connessione dati", Toast.LENGTH_LONG);
             to.show();
         }
-        if(isServicesOK()){
-            init();
-        }
     }
 
-    private void init(){
-        Button btnMap = findViewById(R.id.create);
-        btnMap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent("android.intent.action.CreateChallenge");
-                intent.putExtra("user", user);
-                startActivity(intent);
-            }
-        });
-    }
+
+
 
     public boolean isServicesOK(){
         Log.d(TAG, "isServicesOK: checking google services version");
@@ -70,9 +61,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startChallenge(View view){
-        Intent intent = new Intent("android.intent.action.StartChallenge");
-        intent.putExtra("user", user);
-        startActivity(intent);
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            showGPSDisabledAlertToUser();
+        }
+        else {
+            Intent intent = new Intent("android.intent.action.StartChallenge");
+            intent.putExtra("user", user);
+            startActivity(intent);
+        }
     }
     public void logOut(View view){
         startActivity(new Intent(this, Login.class));
@@ -81,5 +78,39 @@ public class MainActivity extends AppCompatActivity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public void create(View view){
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            showGPSDisabledAlertToUser();
+        }
+        else {
+            Intent intent = new Intent("android.intent.action.CreateChallenge");
+            intent.putExtra("user", user);
+            startActivity(intent);
+        }
+    }
+
+    private void showGPSDisabledAlertToUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Il GPS é disabilitato. Vuoi attivarlo?")
+                .setCancelable(false)
+                .setPositiveButton("Attiva GPS",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent callGPSSettingIntent = new Intent(
+                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 }

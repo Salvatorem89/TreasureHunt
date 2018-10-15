@@ -90,19 +90,18 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         mGps = findViewById(R.id.ic_gps);
         if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey("percorso")) {
             percorso = (ArrayList<Checkpoint>) getIntent().getExtras().get("percorso");
+            Checkpoint checkpoint = new Checkpoint();
+            checkpoint.setQuestion(getIntent().getExtras().getString("question"));
+            checkpoint.setLatitude(getIntent().getExtras().getDouble("lat"));
+            checkpoint.setLongitude(getIntent().getExtras().getDouble("long"));
+            percorso.add(checkpoint);
+
         }
         else {
             percorso = new ArrayList<Checkpoint>();
         }
         user = getIntent().getExtras().getString("user");
         getLocationPermission();
-        if(getIntent().getExtras()!=null){
-            Checkpoint checkpoint = new Checkpoint();
-            checkpoint.setQuestion(getIntent().getExtras().getString("question"));
-            checkpoint.setLatitude(getIntent().getExtras().getDouble("lat"));
-            checkpoint.setLongitude(getIntent().getExtras().getDouble("long"));
-            percorso.add(checkpoint);
-        }
     }
 
     private void init(){
@@ -153,9 +152,8 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
 
                 stato = rq.getStato();
             }
-            resp = rq.getResult().substring(0, 1);
-            Integer idPercorso = Integer.valueOf(resp) + 1;
-
+            resp = rq.getResult();
+            int idPercorso = Integer.parseInt(resp) + 1;
             int idCheckpoint = 1;
 
             for (int i = 0; i < percorso.size(); i++) {
