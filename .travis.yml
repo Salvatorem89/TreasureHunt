@@ -4,4 +4,6 @@ script:
    - ./gradlew build connectedCheck
 
 script:
-  - chmod +x ./gradlew  
+  - chmod +x ./gradlew
+
+  script: ./gradlew clean assembleDebug testDebugUnitTest

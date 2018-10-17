@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -46,6 +47,3 @@ dependencies {
 }
 
 
-task myTest {
-    project.extensions.add("android.testInstrumentationRunnerArguments.class", "it.unisannio.www.treasurehunt.TestLogin")
-}

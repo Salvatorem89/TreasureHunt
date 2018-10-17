@@ -29,6 +29,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-task myTest{
-    project.extensions.add("android.testInstrumentationRunnerArguments.class", "it.unisannio.www.treasurehunt.TestLogin")
-}
