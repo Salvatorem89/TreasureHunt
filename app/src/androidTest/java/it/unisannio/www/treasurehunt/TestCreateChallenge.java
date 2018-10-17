@@ -1,7 +1,9 @@
 package it.unisannio.www.treasurehunt;
 
 
+import android.os.IBinder;
 import android.support.test.espresso.DataInteraction;
+import android.support.test.espresso.Root;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.action.CoordinatesProvider;
@@ -17,12 +19,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.WindowManager;
 
 import com.google.android.gms.fitness.data.Device;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.Is;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +37,8 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
@@ -41,6 +47,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
@@ -171,6 +178,10 @@ public class TestCreateChallenge {
                         isDisplayed()));
         appCompatButton5.perform(click());
 
+        Thread.sleep(2000);
+
+        onView(withText("Creazione sfida avvenuta con successo")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+
     }
 
     private static Matcher<View> childAtPosition(
@@ -190,6 +201,29 @@ public class TestCreateChallenge {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
+    }
+    public class ToastMatcher extends TypeSafeMatcher<Root> {
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("is toast");
+        }
+
+        @Override
+        public boolean matchesSafely(Root root) {
+            int type = root.getWindowLayoutParams().get().type;
+            if (type == WindowManager.LayoutParams.TYPE_TOAST) {
+                IBinder windowToken = root.getDecorView().getWindowToken();
+                IBinder appToken = root.getDecorView().getApplicationWindowToken();
+                if (windowToken == appToken) {
+                    // windowToken == appToken means this window isn't contained by any other windows.
+                    // if it was a window for an activity, it would have TYPE_BASE_APPLICATION.
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
 }
