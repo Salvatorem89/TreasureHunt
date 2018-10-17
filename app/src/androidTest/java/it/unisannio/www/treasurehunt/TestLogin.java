@@ -90,5 +90,37 @@ public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
 
     }
 
+    //verifica se l'utente registrato riesce ad accedere correttamente
+    @Test
+    public void testCorrectLogin() throws InterruptedException{
+
+        loggati = log.findViewById(R.id.sign);
+
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_TAB);
+        Thread.sleep(1000);
+
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
+        getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
+        Thread.sleep(1000);
+
+        log.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loggati.performClick();
+            }
+        });
+
+        Thread.sleep(2000);
+        onView(withText("Login avvenuto con successo")).inRoot(withDecorView(not(is(getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+
+    }
 
 }
