@@ -60,6 +60,7 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                 return;
             }
             mMap.setMyLocationEnabled(true);
+            mMap.setContentDescription("mappa");
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             init();

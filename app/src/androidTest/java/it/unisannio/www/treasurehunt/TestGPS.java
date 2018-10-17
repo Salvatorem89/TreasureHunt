@@ -1,24 +1,13 @@
 package it.unisannio.www.treasurehunt;
 
 
-import android.support.test.espresso.DataInteraction;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
-import android.support.test.espresso.action.CoordinatesProvider;
-import android.support.test.espresso.action.GeneralClickAction;
-import android.support.test.espresso.action.Press;
-import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.support.test.uiautomator.UiDevice;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-
-import com.google.android.gms.fitness.data.Device;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -27,30 +16,29 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class TestCreateChallenge {
+public class TestGPS {
 
     @Rule
     public ActivityTestRule<Login> mActivityTestRule = new ActivityTestRule<>(Login.class);
 
     @Test
-    public void testCreateChallenge() throws InterruptedException {
+    public void testGPS() throws InterruptedException {
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.user),
                         childAtPosition(
@@ -71,23 +59,11 @@ public class TestCreateChallenge {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText2.perform(click());
+        appCompatEditText2.perform(replaceText("salva"), closeSoftKeyboard());
 
         Thread.sleep(2000);
 
         ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.user),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText3.perform(replaceText("salva"), closeSoftKeyboard());
-
-        Thread.sleep(2000);
-
-        ViewInteraction appCompatEditText4 = onView(
                 allOf(withId(R.id.pwd),
                         childAtPosition(
                                 childAtPosition(
@@ -95,7 +71,7 @@ public class TestCreateChallenge {
                                         1),
                                 0),
                         isDisplayed()));
-        appCompatEditText4.perform(replaceText("salva"), closeSoftKeyboard());
+        appCompatEditText3.perform(replaceText("salva"), closeSoftKeyboard());
 
         Thread.sleep(2000);
 
@@ -122,54 +98,9 @@ public class TestCreateChallenge {
         appCompatButton2.perform(click());
 
         Thread.sleep(2000);
-        UiDevice device = UiDevice.getInstance(getInstrumentation());
-        onView(withContentDescription("mappa")).perform(click());
-        //device.click(10, 10);
-        Thread.sleep(2000);
 
-        ViewInteraction appCompatSpinner = onView(
-                allOf(withId(R.id.spinner),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatSpinner.perform(click());
+        onView(withText("Il GPS é disabilitato. Vuoi attivarlo?")).check(matches(isDisplayed()));
 
-        Thread.sleep(2000);
-
-        DataInteraction appCompatTextView = onData(anything())
-                .inAdapterView(childAtPosition(
-                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
-                        0))
-                .atPosition(6);
-        appCompatTextView.perform(click());
-
-        Thread.sleep(2000);
-
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.ok), withText("OK"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        appCompatButton3.perform(click());
-
-        Thread.sleep(2000);
-
-
-        ViewInteraction appCompatButton5 = onView(
-                allOf(withId(R.id.endChallenge), withText("Confirm"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatButton5.perform(click());
 
     }
 
@@ -191,5 +122,4 @@ public class TestCreateChallenge {
             }
         };
     }
-
 }

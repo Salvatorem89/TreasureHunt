@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private void showGPSDisabledAlertToUser(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("Il GPS é disabilitato. Vuoi attivarlo?")
+                .setTitle("alertGPS")
                 .setCancelable(false)
                 .setPositiveButton("Attiva GPS",
                         new DialogInterface.OnClickListener(){
