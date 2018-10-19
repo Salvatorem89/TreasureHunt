@@ -20,12 +20,12 @@ import static org.hamcrest.core.Is.is;
  * Created by Enrico on 26/09/2018.
  */
 
-public class TestRegistration extends ActivityInstrumentationTestCase2<Registration> {
+public class Test2Registration extends ActivityInstrumentationTestCase2<Registration> {
 
     private Registration reg;
     private Button registrati;
 
-    public TestRegistration() {
+    public Test2Registration() {
         super(Registration.class);
     }
 

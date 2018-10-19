@@ -2,50 +2,62 @@ package it.unisannio.www.treasurehunt;
 
 
 import android.os.IBinder;
+import android.support.test.espresso.DataInteraction;
 import android.support.test.espresso.Root;
+import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.action.CoordinatesProvider;
+import android.support.test.espresso.action.GeneralClickAction;
+import android.support.test.espresso.action.Press;
+import android.support.test.espresso.action.Tap;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiDevice;
-import android.support.test.uiautomator.UiObject;
-import android.support.test.uiautomator.UiObjectNotFoundException;
-import android.support.test.uiautomator.UiSelector;
 import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.WindowManager;
 
+import com.google.android.gms.fitness.data.Device;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.Is;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.not;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class TestPlayChallenge {
+public class Test4CreateChallenge {
 
     @Rule
     public ActivityTestRule<Login> mActivityTestRule = new ActivityTestRule<>(Login.class);
 
     @Test
-    public void testPlayChallenge() throws InterruptedException {
+    public void testCreateChallenge() throws InterruptedException {
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.user),
                         childAtPosition(
@@ -56,6 +68,8 @@ public class TestPlayChallenge {
                         isDisplayed()));
         appCompatEditText.perform(click());
 
+        Thread.sleep(2000);
+
         ViewInteraction appCompatEditText2 = onView(
                 allOf(withId(R.id.user),
                         childAtPosition(
@@ -64,9 +78,23 @@ public class TestPlayChallenge {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText2.perform(replaceText("salva"), closeSoftKeyboard());
+        appCompatEditText2.perform(click());
+
+        Thread.sleep(2000);
 
         ViewInteraction appCompatEditText3 = onView(
+                allOf(withId(R.id.user),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("android.widget.LinearLayout")),
+                                        0),
+                                0),
+                        isDisplayed()));
+        appCompatEditText3.perform(replaceText("salva"), closeSoftKeyboard());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatEditText4 = onView(
                 allOf(withId(R.id.pwd),
                         childAtPosition(
                                 childAtPosition(
@@ -74,7 +102,9 @@ public class TestPlayChallenge {
                                         1),
                                 0),
                         isDisplayed()));
-        appCompatEditText3.perform(replaceText("salva"), closeSoftKeyboard());
+        appCompatEditText4.perform(replaceText("salva"), closeSoftKeyboard());
+
+        Thread.sleep(2000);
 
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.sign), withText("Sign in"),
@@ -86,78 +116,73 @@ public class TestPlayChallenge {
                         isDisplayed()));
         appCompatButton.perform(click());
 
+        Thread.sleep(2000);
+
         ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.play), withText("Play Challenge"),
+                allOf(withId(R.id.create), withText("Create Challenge"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                0),
+                        isDisplayed()));
+        appCompatButton2.perform(click());
+
+        Thread.sleep(2000);
+        UiDevice device = UiDevice.getInstance(getInstrumentation());
+        onView(withContentDescription("mappa")).perform(click());
+        //device.click(10, 10);
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatSpinner = onView(
+                allOf(withId(R.id.spinner),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(android.R.id.content),
+                                        0),
+                                0),
+                        isDisplayed()));
+        appCompatSpinner.perform(click());
+
+        Thread.sleep(2000);
+
+        DataInteraction appCompatTextView = onData(anything())
+                .inAdapterView(childAtPosition(
+                        withClassName(is("android.widget.PopupWindow$PopupBackgroundView")),
+                        0))
+                .atPosition(6);
+        appCompatTextView.perform(click());
+
+        Thread.sleep(2000);
+
+        ViewInteraction appCompatButton3 = onView(
+                allOf(withId(R.id.ok), withText("OK"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(android.R.id.content),
                                         0),
                                 1),
                         isDisplayed()));
-        appCompatButton2.perform(click());
+        appCompatButton3.perform(click());
 
         Thread.sleep(2000);
-        UiDevice device = UiDevice.getInstance(getInstrumentation());
-        UiObject marker = device.findObject(new UiSelector().descriptionContains("8"));
-        try {
-            marker.click();
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-        Thread.sleep(2000);
-        UiDevice device2 = UiDevice.getInstance(getInstrumentation());
-        UiObject marker2 = device2.findObject(new UiSelector().descriptionContains("8"));
-        try {
-            marker2.click();
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-        Thread.sleep(2000);
 
-        ViewInteraction radioButton = onView(
-                allOf(withText("Mela"),
+
+        ViewInteraction appCompatButton5 = onView(
+                allOf(withId(R.id.endChallenge), withText("Confirm"),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
+                                        withId(android.R.id.content),
+                                        0),
                                 2),
                         isDisplayed()));
-        radioButton.perform(click());
+        appCompatButton5.perform(click());
 
         Thread.sleep(2000);
-        UiDevice device3 = UiDevice.getInstance(getInstrumentation());
-        UiObject marker3 = device.findObject(new UiSelector().descriptionContains("8"));
-        try {
-            marker.click();
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-        Thread.sleep(3000);
-        UiDevice device4 = UiDevice.getInstance(getInstrumentation());
-        UiObject marker4 = device2.findObject(new UiSelector().descriptionContains("8"));
-        try {
-            marker2.click();
-        } catch (UiObjectNotFoundException e) {
-            e.printStackTrace();
-        }
-        Thread.sleep(3000);
 
-        ViewInteraction radioButton2 = onView(
-                allOf(withText("Orwell"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                2),
-                        isDisplayed()));
-        radioButton2.perform(click());
-        Thread.sleep(2000);
-        onView(withText(startsWith("HAI COMPLETATO LA SFIDA"))).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
+        onView(withText("Creazione sfida avvenuta con successo")).inRoot(new ToastMatcher()).check(matches(isDisplayed()));
 
     }
-
-    //abbiamo fatto un test sul percorso 8 rispodendo a tutte le domande in modo corretto ottenendo
-    //quello che ci aspettavamo e terminando la sfida
 
     private static Matcher<View> childAtPosition(
             final Matcher<View> parentMatcher, final int position) {
@@ -177,7 +202,6 @@ public class TestPlayChallenge {
             }
         };
     }
-
     public class ToastMatcher extends TypeSafeMatcher<Root> {
 
         @Override
@@ -201,4 +225,5 @@ public class TestPlayChallenge {
         }
 
     }
+
 }

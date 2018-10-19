@@ -17,13 +17,13 @@ import static org.hamcrest.core.Is.is;
 //Test sulla activity Login
 
 
-public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
+public class Test1Login extends ActivityInstrumentationTestCase2<Login> {
 
     private Button loggati;
     private Button registrati;
     private Login log;
 
-    public TestLogin() { super(Login.class); }
+    public Test1Login() { super(Login.class); }
 
     @Override
     public void setUp() throws Exception {
@@ -102,14 +102,14 @@ public class TestLogin extends ActivityInstrumentationTestCase2<Login> {
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_TAB);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_A);
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_L);
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_V);
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_O);
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         log.runOnUiThread(new Runnable() {
             @Override
