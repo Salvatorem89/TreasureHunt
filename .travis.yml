@@ -1,10 +1,7 @@
 language: android
 
 script:
-   - ./gradlew build connectedCheck
-
-script:
-  - chmod +x ./gradlew
+  - chmod +x ./gradlew build connectedCheck
 
 script: 
   - ./gradlew clean assembleDebug testDebugUnitTest
