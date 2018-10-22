@@ -7,4 +7,4 @@ script:
   - chmod +x ./gradlew
 
 script: 
-   ./gradlew clean assembleDebug testDebugUnitTest
+  - ./gradlew clean assembleDebug testDebugUnitTest
