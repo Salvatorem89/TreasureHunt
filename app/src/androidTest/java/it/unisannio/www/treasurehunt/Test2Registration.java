@@ -16,10 +16,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 
-/**
- * Created by Enrico on 26/09/2018.
- */
-
 public class Test2Registration extends ActivityInstrumentationTestCase2<Registration> {
 
     private Registration reg;
@@ -40,7 +36,7 @@ public class Test2Registration extends ActivityInstrumentationTestCase2<Registra
     @Test
     public void  testRegWithoutAt() throws InterruptedException {
         Thread.sleep(2000);
-        registrati = (Button) reg.findViewById(R.id.submit);
+        registrati = reg.findViewById(R.id.submit);
         //assertNotNull(registrati);
 
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
@@ -81,7 +77,7 @@ public class Test2Registration extends ActivityInstrumentationTestCase2<Registra
     public void testExistingUser() throws InterruptedException {
 
         Thread.sleep(2000);
-        registrati = (Button) reg.findViewById(R.id.submit);
+        registrati = reg.findViewById(R.id.submit);
         assertNotNull(registrati);
 
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);
@@ -126,7 +122,7 @@ public class Test2Registration extends ActivityInstrumentationTestCase2<Registra
     @Test
     public void testInputNull() throws InterruptedException {
         Thread.sleep(2000);
-        registrati = (Button) reg.findViewById(R.id.submit);
+        registrati = reg.findViewById(R.id.submit);
         assertNotNull(registrati);
 
         getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_S);

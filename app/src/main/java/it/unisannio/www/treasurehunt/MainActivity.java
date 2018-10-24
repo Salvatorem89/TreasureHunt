@@ -62,13 +62,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void startChallenge(View view){
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            showGPSDisabledAlertToUser();
-        }
-        else {
-            Intent intent = new Intent("android.intent.action.StartChallenge");
-            intent.putExtra("user", user);
-            startActivity(intent);
+        if (locationManager != null) {
+            if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                showGPSDisabledAlertToUser();
+            }
+            else {
+                Intent intent = new Intent("android.intent.action.StartChallenge");
+                intent.putExtra("user", user);
+                startActivity(intent);
+            }
         }
     }
     public void logOut(View view){
@@ -76,19 +78,24 @@ public class MainActivity extends AppCompatActivity {
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (cm != null) {
+            activeNetworkInfo = cm.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public void create(View view){
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            showGPSDisabledAlertToUser();
-        }
-        else {
-            Intent intent = new Intent("android.intent.action.CreateChallenge");
-            intent.putExtra("user", user);
-            startActivity(intent);
+        if (locationManager != null) {
+            if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                showGPSDisabledAlertToUser();
+            }
+            else {
+                Intent intent = new Intent("android.intent.action.CreateChallenge");
+                intent.putExtra("user", user);
+                startActivity(intent);
+            }
         }
     }
 
