@@ -158,7 +158,7 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
             String url = "http://treshunte.altervista.org/startchallenge.php";
             DBRequest rq = new DBRequest(url);
             String resp;
-            int stato = 0;
+            int stato;
             stato = rq.getStato();
             int progress = 0;
             while (stato != 100) {
@@ -314,7 +314,10 @@ public class StartChallenge extends AppCompatActivity implements OnMapReadyCallb
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (cm != null) {
+            activeNetworkInfo = cm.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
     

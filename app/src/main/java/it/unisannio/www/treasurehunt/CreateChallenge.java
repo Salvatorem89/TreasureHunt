@@ -142,8 +142,8 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
         if (isNetworkAvailable()) {
             String url = "http://treshunte.altervista.org/idPercorso.php";
             DBRequest rq = new DBRequest(url);
-            String resp = "";
-            int stato = 0;
+            String resp;
+            int stato;
             stato = rq.getStato();
             int progress = 0;
             while (stato != 100) {
@@ -164,8 +164,6 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                         + idCheckpoint + "&lat=" + checkpoint.getLatitude() + "&long=" + checkpoint.getLongitude() + "&question="
                         + quest;
                 rq = new DBRequest(url);
-                resp = "";
-                stato = 0;
                 stato = rq.getStato();
                 progress = 0;
                 while (stato != 100) {
@@ -174,7 +172,6 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
                     }
                     stato = rq.getStato();
                 }
-                resp = rq.getResult();
                 idCheckpoint++;
             }
             Toast.makeText(getApplicationContext(), "Creazione sfida avvenuta con successo", Toast.LENGTH_LONG).show();
@@ -314,7 +311,10 @@ public class CreateChallenge extends AppCompatActivity implements OnMapReadyCall
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (cm != null) {
+            activeNetworkInfo = cm.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

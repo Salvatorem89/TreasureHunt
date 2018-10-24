@@ -44,8 +44,8 @@ public class Login extends AppCompatActivity {
             } else {
                 String url = "http://treshunte.altervista.org/login.php?name=" + user + "&password=" + pwd;
                 DBRequest rq = new DBRequest(url);
-                String resp = "";
-                int stato = 0;
+                String resp;
+                int stato;
                 stato = rq.getStato();
                 int progress = 0;
                 while (stato != 100) {
@@ -77,7 +77,10 @@ public class Login extends AppCompatActivity {
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (cm != null) {
+            activeNetworkInfo = cm.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

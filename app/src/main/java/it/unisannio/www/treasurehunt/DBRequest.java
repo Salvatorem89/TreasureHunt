@@ -48,7 +48,7 @@ class DBRequest {
             String result = "";
             String page = params[0];
 
-            InputStream is = null;
+            InputStream is;
             publishProgress(stato + "%");
             try{
                 HttpClient httpclient = new DefaultHttpClient();

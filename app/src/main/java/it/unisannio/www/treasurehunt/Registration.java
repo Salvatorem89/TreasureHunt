@@ -46,8 +46,8 @@ public class Registration extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Dati inseriti non validi", Toast.LENGTH_LONG).show();
             } else {
                 DBRequest rq = new DBRequest(url);
-                String resp = "";
-                int stato = 0;
+                String resp;
+                int stato;
                 stato = rq.getStato();
                 int progress = 0;
                 while (stato != 100) {
@@ -57,9 +57,7 @@ public class Registration extends AppCompatActivity {
                     }
                     stato = rq.getStato();
                 }
-                if (stato == 100) {
-                    bar.setProgress(100);
-                }
+                bar.setProgress(100);
                 resp = rq.getResult();
                 Toast to = Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_LONG);
                 to.show();
@@ -78,7 +76,10 @@ public class Registration extends AppCompatActivity {
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (cm != null) {
+            activeNetworkInfo = cm.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

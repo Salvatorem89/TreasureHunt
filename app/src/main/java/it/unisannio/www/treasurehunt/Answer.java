@@ -60,7 +60,7 @@ public class Answer extends AppCompatActivity {
         else {
             String url = "http://treshunte.altervista.org/answer.php?question=" + checkpoint.getQuestion();
                 DBRequest rq = new DBRequest(url);
-                int stato = 0;
+                int stato;
                 stato = rq.getStato();
                 int progress = 0;
                 while (stato != 100) {
@@ -152,7 +152,10 @@ public class Answer extends AppCompatActivity {
 
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (cm != null) {
+            activeNetworkInfo = cm.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -164,7 +164,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
             String url = "http://treshunte.altervista.org/time.php?user="+user+"&idPercorso="+percorso.get(0).getIdRun()+"&time="+tempoTotale;
             DBRequest rq = new DBRequest(url);
             String resp;
-            int stato = 0;
+            int stato;
             stato = rq.getStato();
             int progress = 0;
             while (stato != 100) {
@@ -173,7 +173,6 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
                 }
                 stato = rq.getStato();
             }
-            resp = rq.getResult();
             Toast.makeText(getApplicationContext(), "HAI COMPLETATO LA SFIDA in " + tempoTotale + " secondi", Toast.LENGTH_LONG).show();
             Thread.sleep(2000);
             Intent intent = new Intent("android.intent.action.HOME");
@@ -215,8 +214,7 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
                             Log.d(TAG, "onComplete: found location!");
-                            Location currentLocation = (Location) task.getResult();
-                            posizioneAttuale = currentLocation;
+                            posizioneAttuale = (Location) task.getResult();
                         }else{
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(Challenge.this, "unable to get current location", Toast.LENGTH_SHORT).show();
@@ -320,7 +318,10 @@ public class Challenge extends AppCompatActivity implements OnMapReadyCallback,
     }
     private boolean isNetworkAvailable(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = cm.getActiveNetworkInfo();
+        NetworkInfo activeNetworkInfo = null;
+        if (cm != null) {
+            activeNetworkInfo = cm.getActiveNetworkInfo();
+        }
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
